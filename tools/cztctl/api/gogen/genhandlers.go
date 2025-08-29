@@ -44,15 +44,15 @@ func genHandler(dir, rootPkg, projectPkg string, cfg *config.Config, group spec.
 		templateFile = sseHandlerTemplateFile
 	}
 
-	return genFile(fileGenConfig{
-		dir:             dir,
-		subdir:          getHandlerFolderPath(group, route),
-		filename:        filename + ".go",
-		templateName:    "handlerTemplate",
-		category:        category,
-		templateFile:    templateFile,
-		builtinTemplate: builtinTemplate,
-		data: map[string]any{
+	return GenFile(FileGenConfig{
+		Dir:             dir,
+		Subdir:          getHandlerFolderPath(group, route),
+		Filename:        filename + ".go",
+		TemplateName:    "handlerTemplate",
+		Category:        category,
+		TemplateFile:    templateFile,
+		BuiltinTemplate: builtinTemplate,
+		Data: map[string]any{
 			"PkgName":        pkgName,
 			"ImportPackages": genHandlerImports(group, route, rootPkg),
 			"HandlerName":    handler,
