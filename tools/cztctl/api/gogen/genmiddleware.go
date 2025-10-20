@@ -6,6 +6,7 @@ import (
 
 	"github.com/lerity-yao/go-zero/tools/cztctl/api/spec"
 	"github.com/lerity-yao/go-zero/tools/cztctl/config"
+	"github.com/lerity-yao/go-zero/tools/cztctl/internal/version"
 	"github.com/lerity-yao/go-zero/tools/cztctl/util/format"
 )
 
