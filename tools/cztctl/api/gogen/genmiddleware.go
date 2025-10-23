@@ -6,6 +6,7 @@ import (
 
 	"github.com/lerity-yao/go-zero/tools/cztctl/api/spec"
 	"github.com/lerity-yao/go-zero/tools/cztctl/config"
+	"github.com/lerity-yao/go-zero/tools/cztctl/internal/version"
 	"github.com/lerity-yao/go-zero/tools/cztctl/util/format"
 )
 
@@ -31,7 +32,8 @@ func genMiddleware(dir string, cfg *config.Config, api *spec.ApiSpec) error {
 			TemplateFile:    middlewareImplementCodeFile,
 			BuiltinTemplate: middlewareImplementCode,
 			Data: map[string]string{
-				"name": strings.Title(name),
+				"name":    strings.Title(name),
+				"version": version.BuildVersion,
 			},
 		})
 		if err != nil {
