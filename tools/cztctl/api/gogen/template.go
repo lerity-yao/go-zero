@@ -42,7 +42,7 @@ var templates = map[string]string{
 	routesAdditionTemplateFile:  routesAdditionTemplate,
 	typesTemplateFile:           typesTemplate,
 	svcTestTemplateFile:         svcTestTemplate,
-	integrationTestTemplateFile: integrationTestTemplate,
+	//integrationTestTemplateFile: integrationTestTemplate,
 }
 
 // Category returns the category of the api files.

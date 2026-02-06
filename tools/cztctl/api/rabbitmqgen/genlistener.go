@@ -2,6 +2,8 @@ package rabbitmqgen
 
 import (
 	"fmt"
+	"os"
+	"path"
 	"strings"
 
 	"github.com/lerity-yao/go-zero/tools/cztctl/api/gogen"
@@ -40,6 +42,10 @@ func genListener(dir, rootPkg string, cfg *config.Config, api *spec.ApiSpec) err
 		return err
 	}
 
+	listenerFileName = listenerFileName + ".go"
+	filename := path.Join(dir, handlerDir, listenerFileName)
+	_ = os.Remove(filename)
+
 	listenerAdditionNames := getListenerAdditions(api)
 
 	imports := getListenerImports(api, rootPkg)
@@ -47,7 +53,7 @@ func genListener(dir, rootPkg string, cfg *config.Config, api *spec.ApiSpec) err
 	return gogen.GenFile(gogen.FileGenConfig{
 		Dir:             dir,
 		Subdir:          handlerDir,
-		Filename:        listenerFileName + ".go",
+		Filename:        listenerFileName,
 		TemplateName:    "listenerTemplate",
 		Category:        category,
 		TemplateFile:    listenerTemplateFile,

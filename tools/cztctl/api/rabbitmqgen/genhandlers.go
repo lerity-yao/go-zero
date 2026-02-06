@@ -76,7 +76,7 @@ func genHandlerImports(group spec.Group, route spec.Route, parentPkg string) str
 	imports := []string{
 		fmt.Sprintf("\"%s\"", pathx.JoinPackages(parentPkg, gogen.GetLogicFolderPath(group, route))),
 		fmt.Sprintf("\"%s\"", pathx.JoinPackages(parentPkg, contextDir)),
-		fmt.Sprintf("\"%s\"", pathx.JoinPackages(vars.RabbitmqProjectOpenSourceURL, "go-mq/rabbitmq")),
+		fmt.Sprintf("\"%s\"", pathx.JoinPackages(vars.RabbitmqProjectOpenSourceURL, "czt-contrib/mq/rabbitmq")),
 		fmt.Sprintf("\"%s\"", pathx.JoinPackages(vars.ProjectOpenSourceURL, "core/service")),
 	}
 	sse := group.GetAnnotation("sse")

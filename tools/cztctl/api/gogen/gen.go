@@ -119,7 +119,7 @@ func DoGenProjectWithModule(apiFile, dir, moduleName, style string, withTest boo
 		logx.Must(genHandlersTest(dir, rootPkg, projectPkg, cfg, api))
 		logx.Must(genLogicTest(dir, rootPkg, projectPkg, cfg, api))
 		logx.Must(genServiceContextTest(dir, rootPkg, projectPkg, cfg, api))
-		logx.Must(genIntegrationTest(dir, rootPkg, projectPkg, cfg, api))
+		//logx.Must(genIntegrationTest(dir, rootPkg, projectPkg, cfg, api))
 	}
 
 	if err := backupAndSweep(apiFile); err != nil {

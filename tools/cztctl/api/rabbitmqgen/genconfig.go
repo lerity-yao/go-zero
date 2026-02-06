@@ -37,7 +37,7 @@ func genConfig(dir string, cfg *config.Config, api *spec.ApiSpec) error {
 	}
 
 	authImportStr := fmt.Sprintf("\"%s/rest\"", vars.ProjectOpenSourceURL)
-	authImportStr = authImportStr + fmt.Sprintf("\n\"%s/go-mq/rabbitmq\"", vars.RabbitmqProjectOpenSourceURL)
+	authImportStr = authImportStr + fmt.Sprintf("\n\"%s/czt-contrib/mq/rabbitmq\"", vars.RabbitmqProjectOpenSourceURL)
 	configNames := generateRabbitmqConfigNames(api)
 
 	return gogen.GenFile(gogen.FileGenConfig{
