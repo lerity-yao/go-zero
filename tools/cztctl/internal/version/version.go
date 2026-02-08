@@ -6,7 +6,7 @@ import (
 )
 
 // BuildVersion is the version of cztctl.
-const BuildVersion = "1.9.4.1"
+const BuildVersion = "1.9.4.2"
 
 var tag = map[string]int{"pre-alpha": 0, "alpha": 1, "pre-beta": 2, "beta": 3, "released": 4, "": 5}
 
