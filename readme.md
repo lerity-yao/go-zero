@@ -80,6 +80,7 @@ Usage:
   cztctl api [command]
 
 Available Commands:
+  cron        Generate go files for provided cron in api file(根据 api 文件生成 cron 服务)
   rabbitmq    Generate go files for provided rabbitmq in api file(根据 api 文件生成 rabbitmq 服务)
   swagger     Generate swagger file from api(根据 api 文件生成 swagger 文档)
 
@@ -95,15 +96,18 @@ Flags:
                         远程托管模板的地址, --home 和 --remote 一起输入时, --remote优先级别高
 
 Use "cztctl api [command] --help" for more information about a command.
+
+Debugger finished with the exit code 0
 ```
 
-| 命令       | 简写 | 描述                    |
-|----------|----|-----------------------|
-| --help   | -h | 查看帮助提示信息              |
-| swagger  |    | 根据api文件生成 swagger 文档  |
-| rabbitmq |    | 根据api文件生成 rabbitmq 服务 |
+| 命令       | 简写 | 描述                                            |
+|----------|----|-----------------------------------------------|
+| --help   | -h | 查看帮助提示信息                                      |
+| swagger  |    | 根据api文件生成 swagger 文档                          |
+| rabbitmq |    | 根据api文件生成 rabbitmq 服务                         |
+| cron     |    | 根据api文件生成分布式 cron 服务, 支持立即执行，延时执行，指定时间执行，定时执行 |
 
-**暂时只支持swagger, rabbitmq 命令**
+**暂时只支持swagger, rabbitmq， cron 命令**
 
 ### api swagger
 
@@ -291,3 +295,141 @@ service demoA {
     get /test.direct.queue
 }
 ```
+
+
+### api cron
+
+根据 api 文件生成分布式 cron 服务
+
+支持立即执行，延时执行，指定时间执行，定时执行
+
+任务分为两类：
+
+- 内部任务：定时任务
+
+- 外部任务：延时任务，指定执行任务，立即执行任务的区分
+
+
+
+外部任务需要客户端触发
+
+内部任务是服务端自己触发
+
+如果需要外部触发，请参考 https://github.com/lerity-yao/czt-contrib/tree/main/cron
+
+```shell
+$ cztctl api cron -h
+Generate go files for provided cron in api file(根据 api 文件生成 cron 服务)
+
+Usage:
+  cztctl api cron [flags]
+
+Flags:
+      --api string      The api file
+                        api 文件位置
+      --branch string   The branch of the remote repo, it does work with --remote
+                        远程托管模板的分支
+      --dir string      The target dir
+                        生成项目文件夹
+  -h, --help            help for cron
+      --home string     The cztctl home path of the template, --home and --remote cannot be set at the same time, if they are, --remote has higher priority
+                        本地模板的地址, --home 和 --remote 一起输入时, --remote优先级别高
+      --remote string   The remote git repo of the template, --home and --remote cannot be set at the same time, if they are, --remote has higher priority
+                        The git repo directory must be consistent with the https://github.com/zeromicro/go-zero-template directory structure
+                        远程托管模板的地址, --home 和 --remote 一起输入时, --remote优先级别高
+      --style string    The file naming format, see [https://github.com/zeromicro/go-zero/blob/master/tools/goctl/config/readme.md] 
+                        代码命名格式化 (default "gozero")
+      --test            Generate test files
+                        生成测试文件
+      --type-group      Generate type group files
+                        types分组
+
+Debugger finished with the exit code 0
+```
+
+生成 cron 命令为：
+
+```
+cztctl api cron -api ./tools/cztctl/test/test_cron.api -dir .
+```
+
+写 api 文件需要注意事项
+
+1、 route 可以写 req 结构体
+
+如果是外部任务，可以写req，req就是即payload，也就是客户端发送过来的参数
+
+如果是内部任务，写req，目前无作用
+
+
+```api
+	@doc (
+		summary:     "延时任务，指定时间执行，立即执行任务"
+		description: "延时任务，指定时间执行，立即执行任务"
+	)
+	@handler GBoxCommonHandler
+	get /common(req)
+
+```
+
+2、内部任务外部任务的写法
+
+内部任务需要 @doc关键词来申明 cron 表达式， 且内部任务的 route 必须是 cron. + handler名
+
+下面这个写法就是内部任务的写法即定时任务
+
+@doc "cron: */1 * * * *" 申明了 cron 表达式， 表示每 1 分钟执行一次，注意需要 cron: 开头
+@handler 是GDemoB
+那么 route 就是 cron.GDemoB，即 cron. + handler
+
+```
+@server (
+    // 分组 demoA
+    group: demoA
+)
+service demoA {
+	@doc "cron: */1 * * * *"
+	@handler GDemoB
+	post /cron.GDemoB
+}
+```
+
+3、 route 路径
+
+如果任务是延时任务，指定时间执行，立即执行任务，route 随便写，只要不重复就行
+
+如果是定时任务，route 必须是 cron. + handler名
+
+```api
+type (
+    // 用户结构体
+    User {
+        Name string `json:"name"` // 用户名称
+    }
+    Name {
+        Code int `json:"code"`
+    }
+    Job {
+        Id int `json:"id"`
+    }
+)
+
+@server (
+    // 分组 demoA
+    group: demoA
+)
+service demoA {
+    // 外部任务
+    @handler GDemoA
+    post /test.direct.queue (Name)
+    
+    // 内部任务
+    @doc "cron: */1 * * * *"
+    @handler GDemoB
+    post /cron.GDemoB
+}
+```
+
+4、 route 的 method 请写 get
+
+

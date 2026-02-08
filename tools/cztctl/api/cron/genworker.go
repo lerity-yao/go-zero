@@ -97,7 +97,8 @@ func getWorkerAdditions(api *spec.ApiSpec) []string {
 			workerAdditionNames.Add(l)
 			cronDoc := strings.TrimSuffix(strings.TrimPrefix(h.AtDoc.Text, "\""), "\"")
 			if strings.HasPrefix(cronDoc, "cron:") {
-				cronSpec := strings.TrimPrefix(cronDoc, "cron: ")
+				cronSpec := strings.TrimPrefix(cronDoc, "cron:")
+				cronSpec = strings.TrimPrefix(cronSpec, " ")
 				routePath := h.Path
 				if strings.HasPrefix(routePath, "/cron") && strings.HasSuffix(routePath, fmt.Sprintf(".%s", pattern)) {
 					ll := fmt.Sprintf("serverCtx.CronServer.CronAdd(\"%s\", \"%s\")", cronSpec, pattern)
