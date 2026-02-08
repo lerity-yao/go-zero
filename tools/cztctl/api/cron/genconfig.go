@@ -1,9 +1,8 @@
-package rabbitmqgen
+package cron
 
 import (
 	_ "embed"
 	"fmt"
-	"strings"
 
 	"github.com/lerity-yao/go-zero/tools/cztctl/api/gogen"
 	"github.com/lerity-yao/go-zero/tools/cztctl/api/spec"
@@ -37,8 +36,8 @@ func genConfig(dir string, cfg *config.Config, api *spec.ApiSpec) error {
 	}
 
 	authImportStr := fmt.Sprintf("\"%s/rest\"", vars.ProjectOpenSourceURL)
-	authImportStr = authImportStr + fmt.Sprintf("\n\"%s/czt-contrib/mq/rabbitmq\"", vars.YaoxProjectOpenSourceURL)
-	configNames := generateRabbitmqConfigNames(api)
+	authImportStr = authImportStr + fmt.Sprintf("\n\"%s/czt-contrib/cron\"", vars.YaoxProjectOpenSourceURL)
+	configName := fmt.Sprintf("CronConf cron.ServerConfig\n")
 
 	return gogen.GenFile(gogen.FileGenConfig{
 		Dir:             dir,
@@ -49,8 +48,8 @@ func genConfig(dir string, cfg *config.Config, api *spec.ApiSpec) error {
 		TemplateFile:    configTemplateFile,
 		BuiltinTemplate: configTemplate,
 		Data: map[string]string{
-			"authImport":     authImportStr,
-			"rabbitmqConfig": strings.Join(configNames, "\n"),
+			"authImport": authImportStr,
+			"cronConfig": configName,
 		},
 	})
 }

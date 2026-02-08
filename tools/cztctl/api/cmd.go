@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/lerity-yao/go-zero/tools/cztctl/api/apigen"
+	"github.com/lerity-yao/go-zero/tools/cztctl/api/cron"
 	gorabbitmqgen "github.com/lerity-yao/go-zero/tools/cztctl/api/rabbitmqgen"
 	"github.com/lerity-yao/go-zero/tools/cztctl/api/swagger"
 	"github.com/lerity-yao/go-zero/tools/cztctl/config"
@@ -24,6 +25,7 @@ var (
 	//tsCmd       = cobrax.NewCommand("ts", cobrax.WithRunE(tsgen.TsCommand))
 	swaggerCmd    = cobrax.NewCommand("swagger", cobrax.WithRunE(swagger.Command))
 	goRabbitmqCmd = cobrax.NewCommand("rabbitmq", cobrax.WithRunE(gorabbitmqgen.GoRabbitmqCommand))
+	goCronCmd     = cobrax.NewCommand("cron", cobrax.WithRunE(cron.GoCronCommand))
 )
 
 func init() {
@@ -41,6 +43,7 @@ func init() {
 		//validateCmdFlags = validateCmd.Flags()
 		swaggerCmdFlags    = swaggerCmd.Flags()
 		goRabbitmqCmdFlags = goRabbitmqCmd.Flags()
+		goCronCmdFlags     = goCronCmd.Flags()
 	)
 
 	apiCmdFlags.StringVar(&apigen.VarStringOutput, "o")
@@ -79,6 +82,15 @@ func init() {
 	goRabbitmqCmdFlags.BoolVar(&gorabbitmqgen.VarBoolWithTest, "test")
 	goRabbitmqCmdFlags.BoolVar(&gorabbitmqgen.VarBoolTypeGroup, "type-group")
 	goRabbitmqCmdFlags.StringVarWithDefaultValue(&gorabbitmqgen.VarStringStyle, "style", config.DefaultFormat)
+
+	goCronCmdFlags.StringVar(&cron.VarStringDir, "dir")
+	goCronCmdFlags.StringVar(&cron.VarStringAPI, "api")
+	goCronCmdFlags.StringVar(&cron.VarStringHome, "home")
+	goCronCmdFlags.StringVar(&cron.VarStringRemote, "remote")
+	goCronCmdFlags.StringVar(&cron.VarStringBranch, "branch")
+	goCronCmdFlags.BoolVar(&cron.VarBoolWithTest, "test")
+	goCronCmdFlags.BoolVar(&cron.VarBoolTypeGroup, "type-group")
+	goCronCmdFlags.StringVarWithDefaultValue(&cron.VarStringStyle, "style", config.DefaultFormat)
 	//
 	//javaCmdFlags.StringVar(&javagen.VarStringDir, "dir")
 	//javaCmdFlags.StringVar(&javagen.VarStringAPI, "api")
@@ -110,5 +122,5 @@ func init() {
 	//validateCmdFlags.StringVar(&validate.VarStringAPI, "api")
 
 	// Add sub-commands
-	Cmd.AddCommand(swaggerCmd, goRabbitmqCmd)
+	Cmd.AddCommand(swaggerCmd, goRabbitmqCmd, goCronCmd)
 }

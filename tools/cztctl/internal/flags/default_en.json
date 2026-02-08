@@ -52,6 +52,17 @@
         "test": "Generate test files\n生成测试文件",
         "type-group": "Generate type group files\ntypes分组"
       },
+       "cron": {
+        "short": "Generate go files for provided cron in api file(根据 api 文件生成 cron 服务)",
+        "dir": "{{.cztctl.api.dir}}",
+        "api": "{{.cztctl.api.api}}",
+        "home": "{{.global.home}}",
+        "remote": "{{.global.remote}}",
+        "branch": "{{.global.branch}}",
+        "style": "{{.global.style}}",
+        "test": "Generate test files\n生成测试文件",
+        "type-group": "Generate type group files\ntypes分组"
+      },
       "new": {
         "short": "Fast create api service",
         "Example": "cztctl api new [options] service-name",

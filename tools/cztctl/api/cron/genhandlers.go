@@ -1,4 +1,4 @@
-package rabbitmqgen
+package cron
 
 import (
 	_ "embed"
@@ -9,6 +9,8 @@ import (
 	"github.com/lerity-yao/go-zero/tools/cztctl/api/gogen"
 	"github.com/lerity-yao/go-zero/tools/cztctl/api/spec"
 	"github.com/lerity-yao/go-zero/tools/cztctl/config"
+	"github.com/lerity-yao/go-zero/tools/cztctl/internal/version"
+	"github.com/lerity-yao/go-zero/tools/cztctl/util"
 	"github.com/lerity-yao/go-zero/tools/cztctl/util/format"
 	"github.com/lerity-yao/go-zero/tools/cztctl/util/pathx"
 	"github.com/lerity-yao/go-zero/tools/cztctl/vars"
@@ -48,14 +50,17 @@ func genHandler(dir, rootPkg, projectPkg string, cfg *config.Config, group spec.
 		TemplateFile:    handlerTemplateFile,
 		BuiltinTemplate: builtinTemplate,
 		Data: map[string]any{
-			"PkgName":          pkgName,
-			"ImportPackages":   genHandlerImports(group, route, rootPkg),
-			"HandlerName":      handler,
-			"RabbitmqConfName": fmt.Sprintf("%s%s", strings.TrimSuffix(handler, "Handler"), "RabbitmqConf"),
-			"LogicName":        logicName,
-			"LogicType":        getLogicName(route),
-			"HasDoc":           len(route.JoinedDoc()) > 0,
-			"Doc":              GetDoc(route.JoinedDoc()),
+			"PkgName":        pkgName,
+			"ImportPackages": genHandlerImports(group, route, rootPkg),
+			"HandlerName":    handler,
+			"RequestType":    util.Title(route.RequestTypeName()),
+			"LogicName":      logicName,
+			"LogicType":      strings.Title(getLogicName(route)),
+			"function":       strings.Title(strings.TrimSuffix(getLogicName(route), "Logic")),
+			"HasRequest":     len(route.RequestTypeName()) > 0,
+			"version":        version.BuildVersion,
+			"HasDoc":         len(route.JoinedDoc()) > 0,
+			"Doc":            GetDoc(route.JoinedDoc()),
 		},
 	})
 }
@@ -76,8 +81,7 @@ func genHandlerImports(group spec.Group, route spec.Route, parentPkg string) str
 	imports := []string{
 		fmt.Sprintf("\"%s\"", pathx.JoinPackages(parentPkg, gogen.GetLogicFolderPath(group, route))),
 		fmt.Sprintf("\"%s\"", pathx.JoinPackages(parentPkg, contextDir)),
-		fmt.Sprintf("\"%s\"", pathx.JoinPackages(vars.YaoxProjectOpenSourceURL, "czt-contrib/mq/rabbitmq")),
-		fmt.Sprintf("\"%s\"", pathx.JoinPackages(vars.ProjectOpenSourceURL, "core/service")),
+		fmt.Sprintf("\"%s\"", pathx.JoinPackages(vars.YaoxProjectOpenSourceURL, "czt-contrib/cron")),
 	}
 	sse := group.GetAnnotation("sse")
 	if len(route.RequestTypeName()) > 0 || sse == "true" {
