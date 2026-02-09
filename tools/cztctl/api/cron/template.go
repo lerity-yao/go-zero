@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	category                    = "rabbitmq"
+	category                    = "cron"
 	configTemplateFile          = "config.tpl"
 	contextTemplateFile         = "context.tpl"
 	etcTemplateFile             = "etc.tpl"
