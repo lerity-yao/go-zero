@@ -24,12 +24,10 @@ const (
 package handler
 
 import (
-	"context"
 	{{.ImportPackages}}
 )
 
 func RegisterHandlers(server *service.ServiceGroup, serverCtx *svc.ServiceContext) {
-	ctx := context.Background()
 	{{.ListenerAdditions}}
 }
 `
@@ -93,7 +91,7 @@ func getListenerAdditions(api *spec.ApiSpec) []string {
 				handler = strings.Title(handler)
 			}
 
-			l := fmt.Sprintf("server.Add(%s.%s(ctx, serverCtx))",
+			l := fmt.Sprintf("server.Add(%s.%s(serverCtx))",
 				pkgName, handler)
 			listenerAdditionNames.Add(l)
 		}

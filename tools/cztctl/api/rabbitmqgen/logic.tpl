@@ -19,8 +19,9 @@ func New{{.logic}}(ctx context.Context, svcCtx *svc.ServiceContext) *{{.logic}} 
 	}
 }
 
-func (l *{{.logic}}) Consume(ctx context.Context, message []byte) error {
+func (l *{{.logic}}) {{.function}}(req []byte) error {
 	// todo: add your logic here and delete this line
 
 	return nil
 }
+

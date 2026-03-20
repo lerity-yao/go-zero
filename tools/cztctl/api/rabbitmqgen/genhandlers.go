@@ -54,6 +54,7 @@ func genHandler(dir, rootPkg, projectPkg string, cfg *config.Config, group spec.
 			"RabbitmqConfName": fmt.Sprintf("%s%s", strings.TrimSuffix(handler, "Handler"), "RabbitmqConf"),
 			"LogicName":        logicName,
 			"LogicType":        getLogicName(route),
+			"function":         strings.Title(strings.TrimSuffix(getLogicName(route), "Logic")),
 			"HasDoc":           len(route.JoinedDoc()) > 0,
 			"Doc":              GetDoc(route.JoinedDoc()),
 		},
